@@ -414,7 +414,7 @@ export default function Home() {
     <>
             <div className="flex items-center justify-between border-b border-slate-200 p-4">
               <span className="text-lg font-bold text-[color:var(--brand)]">{t.chatsTitle}</span>
-              <button onClick={() => setDrawer(false)} aria-label="Close" className="h-11 w-11 text-xl lg:hidden">
+              <button onClick={() => setDrawer(false)} aria-label="Close" className="h-11 w-11 text-xl">
                 ✕
               </button>
             </div>
@@ -469,9 +469,6 @@ export default function Home() {
 
   return (
     <main style={THEMES[theme].vars as CSSProperties} className="flex h-dvh w-full bg-[color:var(--bg)] text-[color:var(--ink)]">
-      <aside className="hidden w-72 shrink-0 flex-col border-r border-slate-200 bg-white lg:flex">
-        {chatPanel}
-      </aside>
       <div className="mx-auto flex h-full w-full max-w-md min-w-0 flex-1 flex-col lg:max-w-none">
       <header className="bg-gradient-to-br from-[color:var(--brand)] to-[color:var(--brand2)] px-5 pt-5 pb-5 text-white lg:px-10 lg:py-4">
         <div className="mx-auto w-full lg:max-w-3xl">
@@ -480,9 +477,9 @@ export default function Home() {
             <button
               onClick={() => setDrawer(true)}
               aria-label={t.chatsTitle}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-lg lg:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-xl font-bold"
             >
-              ☰
+              ⋮
             </button>
             <h1 className="text-xl font-bold">{t.title}</h1>
           </div>
@@ -638,7 +635,7 @@ export default function Home() {
       </div>
 
       {drawer && (
-        <div className="fixed inset-y-0 left-1/2 z-40 w-full max-w-md -translate-x-1/2 lg:hidden">
+        <div className="fixed inset-y-0 left-1/2 z-40 w-full max-w-md -translate-x-1/2 lg:left-0 lg:max-w-none lg:translate-x-0">
           <button aria-label="Close" onClick={() => setDrawer(false)} className="absolute inset-0 bg-black/40" />
           <aside className="absolute inset-y-0 left-0 flex w-4/5 max-w-xs flex-col bg-white shadow-xl">
             {chatPanel}
