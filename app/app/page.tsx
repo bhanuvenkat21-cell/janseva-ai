@@ -374,15 +374,63 @@ export default function Home() {
     setMsgs((m) => [...m, { role: "bot-detail", id }]);
   }
 
+  const chatPanel = (
+    <>
+            <div className="flex items-center justify-between border-b border-slate-200 p-4">
+              <span className="text-lg font-bold text-[#0F6B4F]">{t.chatsTitle}</span>
+              <button onClick={() => setDrawer(false)} aria-label="Close" className="h-11 w-11 text-xl lg:hidden">
+                ✕
+              </button>
+            </div>
+            <button
+              onClick={newChat}
+              className="m-3 flex min-h-12 items-center gap-2 rounded-xl bg-[#E3F3EA] px-3 font-semibold text-[#0F6B4F]"
+            >
+              ＋ {t.newChat}
+            </button>
+            <div className="flex-1 space-y-1 overflow-y-auto px-2">
+              {chats.length === 0 && <p className="p-3 text-sm text-slate-500">{t.noChats}</p>}
+              {[...chats]
+                .sort((a, b) => b.updated - a.updated)
+                .map((c) => (
+                  <div
+                    key={c.id}
+                    className={`flex items-center rounded-xl ${c.id === activeId ? "bg-[#E3F3EA]" : ""}`}
+                  >
+                    <button
+                      onClick={() => openChat(c.id)}
+                      className="min-h-12 flex-1 truncate px-3 text-left text-sm font-medium"
+                    >
+                      {c.title}
+                    </button>
+                    <button
+                      onClick={() => deleteChat(c.id)}
+                      aria-label={t.del}
+                      className="h-11 w-11 text-slate-400"
+                    >
+                      🗑
+                    </button>
+                  </div>
+                ))}
+            </div>
+            <p className="border-t border-slate-200 p-3 text-xs text-slate-400">{t.savedHere}</p>
+          </>
+  );
+
   return (
-    <main className="mx-auto flex h-dvh max-w-md flex-col bg-[#F1F7F3] text-[#10261D]">
-      <header className="bg-gradient-to-br from-[#0F6B4F] to-[#1A9B6F] px-5 pt-5 pb-5 text-white">
+    <main className="flex h-dvh w-full bg-[#F1F7F3] text-[#10261D]">
+      <aside className="hidden w-72 shrink-0 flex-col border-r border-slate-200 bg-white lg:flex">
+        {chatPanel}
+      </aside>
+      <div className="mx-auto flex h-full w-full max-w-md min-w-0 flex-1 flex-col lg:max-w-none">
+      <header className="bg-gradient-to-br from-[#0F6B4F] to-[#1A9B6F] px-5 pt-5 pb-5 text-white lg:px-10">
+        <div className="mx-auto w-full lg:max-w-3xl">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setDrawer(true)}
               aria-label={t.chatsTitle}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-lg"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-lg lg:hidden"
             >
               ☰
             </button>
@@ -407,12 +455,14 @@ export default function Home() {
           <span>🛡️</span>
           <span>{t.trust}</span>
         </div>
+        </div>
       </header>
 
       <div className="flex-1 overflow-y-auto">
+        <div className="mx-auto w-full lg:max-w-3xl">
         <section className="px-4 pt-4">
           <div className="mb-2 text-xs font-bold tracking-wide text-slate-500 uppercase">{t.popular}</div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 lg:grid-cols-3 lg:gap-3">
             {Object.keys(SHORT).map((id) => {
               const s = getService(id);
               if (!s) return null;
@@ -485,9 +535,11 @@ export default function Home() {
           )}
           <div ref={endRef} />
         </div>
+        </div>
       </div>
 
-      <footer className="border-t border-slate-200 bg-white px-3 pt-2 pb-3">
+      <footer className="border-t border-slate-200 bg-white px-3 pt-2 pb-3 lg:px-10">
+        <div className="mx-auto w-full lg:max-w-3xl">
         <div className="mb-2 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {t.prompts.map((p) => (
             <button
@@ -531,49 +583,15 @@ export default function Home() {
             </button>
           </div>
         )}
+        </div>
       </footer>
+      </div>
+
       {drawer && (
-        <div className="fixed inset-y-0 left-1/2 z-40 w-full max-w-md -translate-x-1/2">
+        <div className="fixed inset-y-0 left-1/2 z-40 w-full max-w-md -translate-x-1/2 lg:hidden">
           <button aria-label="Close" onClick={() => setDrawer(false)} className="absolute inset-0 bg-black/40" />
           <aside className="absolute inset-y-0 left-0 flex w-4/5 max-w-xs flex-col bg-white shadow-xl">
-            <div className="flex items-center justify-between border-b border-slate-200 p-4">
-              <span className="text-lg font-bold text-[#0F6B4F]">{t.chatsTitle}</span>
-              <button onClick={() => setDrawer(false)} aria-label="Close" className="h-11 w-11 text-xl">
-                ✕
-              </button>
-            </div>
-            <button
-              onClick={newChat}
-              className="m-3 flex min-h-12 items-center gap-2 rounded-xl bg-[#E3F3EA] px-3 font-semibold text-[#0F6B4F]"
-            >
-              ＋ {t.newChat}
-            </button>
-            <div className="flex-1 space-y-1 overflow-y-auto px-2">
-              {chats.length === 0 && <p className="p-3 text-sm text-slate-500">{t.noChats}</p>}
-              {[...chats]
-                .sort((a, b) => b.updated - a.updated)
-                .map((c) => (
-                  <div
-                    key={c.id}
-                    className={`flex items-center rounded-xl ${c.id === activeId ? "bg-[#E3F3EA]" : ""}`}
-                  >
-                    <button
-                      onClick={() => openChat(c.id)}
-                      className="min-h-12 flex-1 truncate px-3 text-left text-sm font-medium"
-                    >
-                      {c.title}
-                    </button>
-                    <button
-                      onClick={() => deleteChat(c.id)}
-                      aria-label={t.del}
-                      className="h-11 w-11 text-slate-400"
-                    >
-                      🗑
-                    </button>
-                  </div>
-                ))}
-            </div>
-            <p className="border-t border-slate-200 p-3 text-xs text-slate-400">{t.savedHere}</p>
+            {chatPanel}
           </aside>
         </div>
       )}
