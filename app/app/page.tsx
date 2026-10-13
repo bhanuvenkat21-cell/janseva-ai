@@ -275,6 +275,7 @@ export default function Home() {
   const [chats, setChats] = useState<Chat[]>([]);
   const [activeId, setActiveId] = useState("");
   const [drawer, setDrawer] = useState(false);
+  const [sidebar, setSidebar] = useState(false);
   const [theme, setTheme] = useState<ThemeKey>("ocean");
   const [loaded, setLoaded] = useState(false);
   const [installEvt, setInstallEvt] = useState<InstallEvent | null>(null);
@@ -412,9 +413,14 @@ export default function Home() {
 
   const chatPanel = (
     <>
-            <div className="flex items-center justify-between border-b border-slate-200 p-4">
+            <div className="flex items-center justify-between border-b border-slate-200 p-4 lg:pl-16">
               <span className="text-lg font-bold text-[color:var(--brand)]">{t.chatsTitle}</span>
-              <button onClick={() => setDrawer(false)} aria-label="Close" className="h-11 w-11 text-xl">
+              <button onClick={() => {
+                  setDrawer(false);
+                  setSidebar(false);
+                }}
+                aria-label="Close"
+                className="h-11 w-11 text-xl">
                 ✕
               </button>
             </div>
@@ -469,6 +475,20 @@ export default function Home() {
 
   return (
     <main style={THEMES[theme].vars as CSSProperties} className="flex h-dvh w-full bg-[color:var(--bg)] text-[color:var(--ink)]">
+      {sidebar && (
+        <aside className="hidden w-72 shrink-0 flex-col border-r border-slate-200 bg-white lg:flex">
+          {chatPanel}
+        </aside>
+      )}
+      <button
+        onClick={() => setSidebar((v) => !v)}
+        aria-label={t.chatsTitle}
+        className={`fixed top-3 left-3 z-50 hidden h-11 w-11 items-center justify-center rounded-full text-xl font-bold lg:flex ${
+          sidebar ? "bg-slate-100 text-slate-700" : "bg-white/20 text-white"
+        }`}
+      >
+        ⋮
+      </button>
       <div className="mx-auto flex h-full w-full max-w-md min-w-0 flex-1 flex-col lg:max-w-none">
       <header className="bg-gradient-to-br from-[color:var(--brand)] to-[color:var(--brand2)] px-5 pt-5 pb-5 text-white lg:px-10 lg:py-4">
         <div className="mx-auto w-full lg:max-w-3xl">
@@ -477,7 +497,7 @@ export default function Home() {
             <button
               onClick={() => setDrawer(true)}
               aria-label={t.chatsTitle}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-xl font-bold"
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 text-xl font-bold lg:hidden"
             >
               ⋮
             </button>
@@ -635,7 +655,7 @@ export default function Home() {
       </div>
 
       {drawer && (
-        <div className="fixed inset-y-0 left-1/2 z-40 w-full max-w-md -translate-x-1/2 lg:left-0 lg:max-w-none lg:translate-x-0">
+        <div className="fixed inset-y-0 left-1/2 z-40 w-full max-w-md -translate-x-1/2 lg:hidden">
           <button aria-label="Close" onClick={() => setDrawer(false)} className="absolute inset-0 bg-black/40" />
           <aside className="absolute inset-y-0 left-0 flex w-4/5 max-w-xs flex-col bg-white shadow-xl">
             {chatPanel}
